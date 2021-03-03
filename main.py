@@ -14,18 +14,6 @@ class Board:
     def __init__(self, board):
         self.board = board
 
-    def display(self):
-        """Prints out each row of the board with a | after the 3rd and 6th col, and a row of -'s after the 3rd and 6th row"""
-        for row in range(9):
-            rowString = ""
-            for col in range(9):
-                if col == 3 or col == 6:
-                    rowString += "| "
-                rowString += str(self.board[col + row * 9].value) + " "
-            if row == 3 or row == 6:
-                print("-" * 21)
-            print(rowString)
-
     def getCode(self) -> "code":
         """Returns the code of the current state of the board"""
         code = ""
@@ -41,9 +29,22 @@ def generateBoard(code) -> Board:
         block = math.floor(i / 3) % 3 + math.floor(i / 27) * 3
         row = math.floor(i / 9)
         col = i % 9
-        # print(i, row, col, block)
+        print(i, row, col, block)
         board.append(Cell(block, row, col, code[i], []))
     return Board(board)
+
+
+def display(code):
+    """Prints out each row of the board with a | after the 3rd and 6th col, and a row of -'s after the 3rd and 6th row"""
+    for row in range(9):
+        rowString = ""
+        for col in range(9):
+            if col == 3 or col == 6:
+                rowString += "| "
+            rowString += code[col + row * 9] + " "
+        if row == 3 or row == 6:
+            print("-" * 21)
+        print(rowString)
 
 
 def solve(code):
@@ -55,5 +56,4 @@ code = (
 )
 
 b = generateBoard(code)
-b.display()
-# print(b.getCode())
+# display(b.getCode())
