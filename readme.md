@@ -1,6 +1,6 @@
 # Python sudoku solver (no backtracking)
 
-This script can solve a sudoku game without using backtracking
+A sodoku solver in Python without using backtracking
 
 ## Usage
 
