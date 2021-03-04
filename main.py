@@ -2,7 +2,7 @@ import math
 
 
 class Cell:
-    def __init__(self, block, row, col, value, possibleValues):
+    def __init__(self, block, row, col, value, possibleValues) -> None:
         self.block = block
         self.row = row
         self.col = col
@@ -11,7 +11,7 @@ class Cell:
 
 
 class Board:
-    def __init__(self, board):
+    def __init__(self, board) -> None:
         self.board = board
 
     def getCode(self) -> "code":
@@ -29,25 +29,37 @@ def generateBoard(code) -> Board:
         block = math.floor(i / 3) % 3 + math.floor(i / 27) * 3
         row = math.floor(i / 9)
         col = i % 9
-        print(i, row, col, block)
+        # print(i, row, col, block)
         board.append(Cell(block, row, col, code[i], []))
     return Board(board)
 
 
-def display(code):
-    """Prints out each row of the board with a | after the 3rd and 6th col, and a row of -'s after the 3rd and 6th row"""
-    for row in range(9):
-        rowString = ""
-        for col in range(9):
-            if col == 3 or col == 6:
-                rowString += "| "
-            rowString += code[col + row * 9] + " "
-        if row == 3 or row == 6:
-            print("-" * 21)
+def createSeperator(start, mid, end) -> str:
+    """Returns a seperator that is used by the drawBoard function"""
+    return start + "─" * 7 + mid + "─" * 7 + mid + "─" * 7 + end
+
+
+def drawBoard(code) -> None:
+    """Draws the sudoku board to the screen"""
+    rowList = []
+    rowList.append(createSeperator("┌", "┬", "┐"))
+    for x in range(9):
+        if x == 3 or x == 6:
+            rowList.append(createSeperator("├", "┼", "┤"))
+        row = code[x * 9 : x * 9 + 9]
+        rowString = "│ "
+        for x in range(9):
+            if x == 3 or x == 6:
+                rowString += "│ "
+            rowString += row[x] + " "
+        rowString += "│"
+        rowList.append(rowString)
+    rowList.append(createSeperator("└", "┴", "┘"))
+    for rowString in rowList:
         print(rowString)
 
 
-def solve(code):
+def solve(code) -> "code":
     return
 
 
@@ -56,4 +68,4 @@ code = (
 )
 
 b = generateBoard(code)
-# display(b.getCode())
+drawBoard(b.getCode())
