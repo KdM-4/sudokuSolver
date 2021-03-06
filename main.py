@@ -25,55 +25,55 @@ class Board:
             cell = Cell(block, row, col, int(boardId[cellIndex]))
             # Add cell to lists
             self.cells.append(cell)
-            self.blocks[block].append(cell.value)
-            self.rows[row].append(cell.value)
-            self.cols[col].append(cell.value)
+            self.blocks[block].append(cell)
+            self.rows[row].append(cell)
+            self.cols[col].append(cell)
 
-    def updateCellValue(self, index, value) -> None:
-        cell = self.cells[index]
-        cell.value = value
-        blockIndex = cell.row % 3 * 3 + cell.col % 3
-        self.blocks[cell.block][blockIndex] = value
-        self.rows[cell.row][cell.col] = value
-        self.cols[cell.col][cell.row] = value
+    def updateCell(self, index, cell) -> None:
+        boardCell = self.cells[index]
+        boardCell = cell
+        blockIndex = boardCell.row % 3 * 3 + boardCell.col % 3
+        self.blocks[boardCell.block][blockIndex] = boardCell
+        self.rows[boardCell.row][boardCell.col] = boardCell
+        self.cols[boardCell.col][boardCell.row] = boardCell
 
-    def checkIfFilled(self):
+    def checkIfFilled(self) -> bool:
         for cell in self.cells:
             if cell.value == 0:
                 return False
         return True
 
-    def getCode(self):
+    def getCode(self) -> str:
         code = ""
         for cell in self.cells:
             code += str(cell.value)
         return code
 
 
-def findEmptyCell(cells, currentIndex):
+def findEmptyCell(cells, currentIndex) -> int:
     for index in range(currentIndex + 1, 81):
         if cells[index].value == 0:
             return index
     return -1
 
 
-def getValue(board, index):
+def getValue(board, index) -> int:
     possibleValues = [num for num in range(1, 10)]
     cell = board.cells[index]
     for i in range(9):
-        blockVal = board.blocks[cell.block][i]
-        rowVal = board.rows[cell.row][i]
-        colVal = board.cols[cell.col][i]
-        if blockVal != 0 and blockVal in possibleValues:
-            possibleValues.remove(blockVal)
-        if rowVal != 0 and rowVal in possibleValues:
-            possibleValues.remove(rowVal)
-        if colVal != 0 and colVal in possibleValues:
-            possibleValues.remove(colVal)
+        block = board.blocks[cell.block][i]
+        row = board.rows[cell.row][i]
+        col = board.cols[cell.col][i]
+        if block.value != 0 and block.value in possibleValues:
+            possibleValues.remove(block.value)
+        if row.value != 0 and row.value in possibleValues:
+            possibleValues.remove(row.value)
+        if col.value != 0 and col.value in possibleValues:
+            possibleValues.remove(col.value)
     if len(possibleValues) == 1:
-        return possibleValues[0]
+        return possibleValues[0], possibleValues
     else:
-        return 0
+        return 0, possibleValues
 
 
 def createSeperator(start, mid, end) -> str:
@@ -101,7 +101,7 @@ def drawBoard(code) -> None:
         print(rowString)
 
 
-def solve(boardId):
+def solve(boardId) -> str:
     board = Board(boardId)
 
     solved = False
@@ -111,8 +111,9 @@ def solve(boardId):
     while solved == False:
         cellIndex = findEmptyCell(board.cells, cellIndex)
         if cellIndex != -1:
-            cellValue = getValue(board, cellIndex)
-            board.updateCellValue(cellIndex, cellValue)
+            cell = board.cells[cellIndex]
+            cell.value, cell.possibleValues = getValue(board, cellIndex)
+            board.updateCell(cellIndex, cell)
         elif board.checkIfFilled():
             solved = True
         else:
