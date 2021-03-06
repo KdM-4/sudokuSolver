@@ -110,7 +110,9 @@ def solve(boardId) -> str:
 
     cellIndex = 0
 
-    while solved == False:
+    _iter, _max = 0, 1000
+
+    while solved == False and _iter < _max:
         cellIndex = findEmptyCell(board.cells, cellIndex)
         if cellIndex != -1:
             cell = board.cells[cellIndex]
@@ -120,6 +122,7 @@ def solve(boardId) -> str:
             solved = True
         else:
             cellIndex = 0
+        _iter += 1
 
     return board.getCode()
 
