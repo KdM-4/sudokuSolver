@@ -79,7 +79,7 @@ def findUnique(_list):
 def getValue(board, index) -> int:
     possibleValues = [num for num in range(1, 10)]
     cell = board.cells[index]
-    blockSuperPossibilities = []
+    superPossibilities = []
     for i in range(9):
         blockCell = board.blocks[cell.block][i]
         rowCell = board.rows[cell.row][i]
@@ -90,17 +90,16 @@ def getValue(board, index) -> int:
             possibleValues.remove(rowCell.value)
         if colCell.value != 0 and colCell.value in possibleValues:
             possibleValues.remove(colCell.value)
-        for possibility in blockCell.possibleValues:
-            blockSuperPossibilities.append(possibility)
-    for possibility in possibleValues:
-        blockSuperPossibilities.append(possibility)
-    blockPossiblePossibilities = [
-        x for x in blockSuperPossibilities if x in possibleValues
-    ]
-    uniqueBlockPossibilities = findUnique(blockPossiblePossibilities)
-    if len(uniqueBlockPossibilities) == 1:
-        return uniqueBlockPossibilities[0], []
-    elif len(possibleValues) == 1:
+        superPossibilities.extend(blockCell.possibleValues)
+        superPossibilities.extend(rowCell.possibleValues)
+        superPossibilities.extend(colCell.possibleValues)
+    # THIS DOESNT REALLY WORK ALL TOO WELL
+    superPossibilities.extend(possibleValues)
+    possiblePossibilities = [x for x in superPossibilities if x in possibleValues]
+    uniquePossibilities = findUnique(possiblePossibilities)
+    # if len(uniquePossibilities) == 1:
+    #     return uniquePossibilities[0], []
+    if len(possibleValues) == 1:
         return possibleValues[0], []
     else:
         return 0, possibleValues
@@ -140,7 +139,7 @@ def solve(boardId) -> str:
 
     _iter, _max = 0, 1000
 
-    while solved == False and _iter < _max:
+    while not solved and _iter < _max:
         cellIndex = findEmptyCell(board.cells, cellIndex)
         if cellIndex != -1:
             cell = board.cells[cellIndex]
@@ -156,8 +155,9 @@ def solve(boardId) -> str:
 
 
 boardId = (
-    # "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
-    "001003000000850000040026800079005002002000000500000004000000027600040000000190680"
+    "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
+    # "001003000000850000040026800079005002002000000500000004000000027600040000000190680"
+    # "005000000002401070304000560000000000000007984800090010000200100090070002018300040"
 )
 
 drawBoard(boardId)
