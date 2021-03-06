@@ -1,7 +1,9 @@
-import math
+from math import floor
 
 
 class Cell:
+    possibleValues = []
+
     def __init__(self, block, row, col, value) -> None:
         self.block = block
         self.row = row
@@ -18,8 +20,8 @@ class Board:
     def __init__(self, boardId) -> None:
         for cellIndex in range(81):
             # Get corresponding indexes for positional lists
-            block = math.floor(cellIndex / 3) % 3 + math.floor(cellIndex / 27) * 3
-            row = math.floor(cellIndex / 9)
+            block = floor(cellIndex / 3) % 3 + floor(cellIndex / 27) * 3
+            row = floor(cellIndex / 9)
             col = cellIndex % 9
             # Create cell object
             cell = Cell(block, row, col, int(boardId[cellIndex]))
